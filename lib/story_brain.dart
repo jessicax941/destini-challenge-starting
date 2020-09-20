@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'story.dart';
 
 class StoryBrain {
@@ -33,10 +35,57 @@ class StoryBrain {
         choice2: '')
   ];
 
-  StoryBrain();
+  int _storyNum;
 
-  String getStory() {
-    return _storyData[0].getTitle();
+  StoryBrain() {
+    this._storyNum = 0;
+  }
+
+  String getCurrStoryTitle() {
+    print("story num is $_storyNum");
+    return _storyData[this._storyNum].getTitle();
+  }
+
+  String getCurrStoryChoice1() {
+    return _storyData[this._storyNum].getChoice1();
+  }
+
+  String getCurrStoryChoice2() {
+    return _storyData[this._storyNum].getChoice2();
+  }
+
+  void nextStory(int choiceNumber) {
+    switch (this._storyNum) {
+      case 0:
+        this._storyNum = choiceNumber == 1 ? 2 : 1;
+        break;
+      case 1:
+        this._storyNum = choiceNumber == 1 ? 2 : 3;
+        break;
+      case 2:
+        this._storyNum = choiceNumber == 1 ? 5 : 4;
+        break;
+      case 3:
+      case 4:
+      case 5:
+        restart();
+        break;
+      default:
+        throw Exception('unknown story number $_storyNum');
+    }
+  }
+
+  void restart() {
+    this._storyNum = 0;
+  }
+
+  bool shouldButtonBeVisible() {
+    if (_storyNum == 0 || _storyNum == 1 || _storyNum == 2) {
+      return true;
+    } else {
+      // end of story
+      return false;
+    }
   }
 }
 
